@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<dl>
+  {% for item in ps %}
+    <dt>{{ item["name"] }}</dt>
+    <dd>
+      <pre>
+        {{ item["id"] }}
+      </pre>
+    </dd>
+  {% endfor %}
+</dl>
+{% endblock body %}
