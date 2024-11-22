@@ -1,4 +1,4 @@
-# run with `flask --app app run --debug``
+# run with `flask --app app run --debug --port 3000``
 
 import os
 
@@ -115,7 +115,7 @@ SPOTIFY_CLIENT_SECRET = "2b40cfddb1c74814a4092114c8ffc206"
 oauth_manager = SpotifyOAuth(
     client_id=SPOITFY_CLIENT_ID,
     client_secret=SPOTIFY_CLIENT_SECRET,
-    redirect_uri="http://localhost:5000",
+    redirect_uri="http://localhost:3000",
     scope="user-read-email playlist-read-private playlist-read-collaborative user-library-read",
     cache_handler=CacheSessionHandler(session, "spotify_token"),
 )
