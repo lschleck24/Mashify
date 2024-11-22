@@ -1,4 +1,5 @@
-# run with `flask --app app run --debug --port 3000``
+# run with
+# flask --app app run --debug --port 3000
 
 import os
 import time
@@ -237,9 +238,13 @@ def show_spotify_info():
             # create playlist obj row using info
             new_playlist = Playlists(playlist_table_id = playlist_table_id, playlist_spotify_id = playlist_id, playlist_name = playlist_name)
 
-            # add playlist obj to db and commit
-            db.session.add(new_playlist)
-            db.session.commit()
+            # try to add playlist obj to db and commit
+            try:
+                db.session.add(new_playlist)
+                db.session.commit()
+            # if playlist already exists, just pass
+            except:
+                pass
 
     # if no playlists found, just pass
     except:
