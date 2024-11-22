@@ -1,6 +1,7 @@
 # run with `flask --app app run --debug --port 3000``
 
 import os
+import time
 
 from flask import (
     Flask,
@@ -104,20 +105,25 @@ class Artist(db.Model):
 
 
 # TODO: add Genre, SongByArtist, SongByGenre
-#https://www.geeksforgeeks.org/connect-flask-to-a-database-with-flask-sqlalchemy/#setting-up-sqlalchemy
+# https://www.geeksforgeeks.org/connect-flask-to-a-database-with-flask-sqlalchemy/#setting-up-sqlalchemy
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/#installation
 
 
 # setup spotify stuff
+SCOPE = "user-read-email playlist-read-private playlist-read-collaborative user-library-read"
 SPOITFY_CLIENT_ID = "d511528d911b44e9a81863869ee60809"
 SPOTIFY_CLIENT_SECRET = "2b40cfddb1c74814a4092114c8ffc206"
+REDIRECT_URI = "http://127.0.0.1:3000"
+SHOW_DIALOG = True
 
+# i might update URI later so you don't have to add /callback to end
 oauth_manager = SpotifyOAuth(
     client_id=SPOITFY_CLIENT_ID,
     client_secret=SPOTIFY_CLIENT_SECRET,
-    redirect_uri="http://localhost:3000",
-    scope="user-read-email playlist-read-private playlist-read-collaborative user-library-read",
+    redirect_uri=REDIRECT_URI+"/callback",
+    scope=SCOPE,
     cache_handler=CacheSessionHandler(session, "spotify_token"),
+    show_dialog=SHOW_DIALOG,
 )
 
 
@@ -126,11 +132,12 @@ oauth_manager = SpotifyOAuth(
 def homepage():
     jinja_env = {}
 
-    if request.args.get("code") or oauth_manager.validate_token(
-        oauth_manager.get_cached_token()
-    ):
-        oauth_manager.get_access_token(request.args.get("code"))
-        return redirect("/spotify-info")
+    # i will look at this later but i think i alr handled this in the callback
+    # if request.args.get("code") or oauth_manager.validate_token(
+    #     oauth_manager.get_cached_token()
+    # ):
+    #     oauth_manager.get_access_token(request.args.get("code"))
+    #     return redirect("/spotify-info")
 
     return render_template(
         "index.html", spotify_auth_url=oauth_manager.get_authorize_url()
@@ -138,22 +145,87 @@ def homepage():
     )
 
 
+@app.route("/callback")
+def callback():
+    session.clear()
+    
+    # setup auth again to be safe... also get token
+    oauth = SpotifyOAuth(
+        client_id=SPOITFY_CLIENT_ID,
+        client_secret=SPOTIFY_CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI+"/callback",
+        scope=SCOPE,
+        cache_handler=CacheSessionHandler(session, "spotify_token"),
+        show_dialog=SHOW_DIALOG,
+    )
+
+    # get user session info
+    code = request.args.get('code')
+    token_info = oauth.get_access_token(code)
+
+    # save user token info
+    session["token_info"] = token_info
+
+    # redirect to playlist info page
+    return redirect("/spotify-info")
+
+# this is just a helper function to get the token/check if it's still valid
+def get_token(session):
+    token_valid = True
+    token_info = session.get("token_info", {})
+
+    # Checking if the session already has a token stored
+    if not (session.get('token_info', False)):
+        token_valid = False
+        return token_info, token_valid
+
+    # Checking if token has expired
+    now = int(time.time())
+    is_token_expired = session.get('token_info').get('expires_at') - now < 60
+
+    # Refreshing token if it has expired
+    if (is_token_expired):
+        # Don't reuse a SpotifyOAuth object because they store token info and you could leak user tokens if you reuse a SpotifyOAuth object
+        oauth = SpotifyOAuth(
+            client_id=SPOITFY_CLIENT_ID,
+            client_secret=SPOTIFY_CLIENT_SECRET,
+            redirect_uri=REDIRECT_URI+"/callback",
+            scope=SCOPE,
+            cache_handler=CacheSessionHandler(session, "spotify_token"),
+            show_dialog=SHOW_DIALOG,
+        )
+        token_info = oauth.refresh_access_token(session.get('token_info').get('refresh_token'))
+
+    token_valid = True
+    return token_info, token_valid
+# end helper
+
 # this is where we get spotify info
-@app.route("/spotify-info", methods = ["GET"])
+@app.route("/spotify-info")
 def show_spotify_info():
+    # if somehow didn't grab user token, redirect to login
     if not oauth_manager.validate_token(oauth_manager.get_cached_token()):
         return redirect("/")
 
-    sp = Spotify(auth_manager=oauth_manager)
+    # set our session info
+    session['token_info'], authorized = get_token(session)
+    session.modified = True
+    if not authorized:
+        return redirect('/')
 
-    # get user's playlists
-    playlists = sp.current_user_playlists()["items"]
+    #data = request.form
+    # setup spotify object so we can get our data
+    sp = Spotify(auth=session.get('token_info').get('access_token'))
 
-    # put playlist info into database --- this can prob be turned into a function to be called later, along with info for other tables
-
-    # try to put playlist info into database (if already exists, will go to except and pass on)
+    # try to get user's playlists, then add n stuff
     try:
-        # iterare through lists of playlists
+        playlists = sp.current_user_playlists()["items"]
+
+        # put playlist info into database --- this can prob be turned into a function to be called later, along with info for other tables
+
+        # also try to put playlist info into database (if already exists, will go to except and pass on)
+
+        # iterate through lists of playlists
         for i in range(0, len(playlists)):
             playlists[i]["table_id"] = i # assign int primary key bc it didn't want a string primary key
 
@@ -168,8 +240,14 @@ def show_spotify_info():
             # add playlist obj to db and commit
             db.session.add(new_playlist)
             db.session.commit()
+
+    # if no playlists found, just pass
     except:
-        pass
+        playlists = [{
+            "name": "error:",
+            "id": "no playlists found!"
+        }]
+        
 
 # this doesnt work==maybe bc it expects primary key to be an int
 #    for playlist in playlists:
