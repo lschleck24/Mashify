@@ -3,59 +3,6 @@
 
 
 /* menubar stuff */
-.menubar {
-    background-color: #2f2f36;
-    height: 80;
-    padding: 30px;
-}
-
-.menubar a{
-    color:hsl(from color h s l);
-    text-decoration: none;
-
-}
-
-.menubar a.active {
-    color: pink;
-}
-
-.menubar a.hover {
-    color: #9fb0b9
-}
-
-.menubar a.visited {
-    color: #cad4da;
-    text-decoration: none;
-}
-
-/* committee header stuff */
-
-.committee_header{
-  display: flex;
-  align-content: flex-start;
-
-  background-color: palevioletred;
-
-  font-weight: bolder;
-  size: 1em; /*figure out how to make big*/
-  color:#9fc4d6;
-  padding: 2em;
-}
-
-
-.committee_body{
-  display: grid;
-  grid-template-columns: auto auto auto;
-
-  margin: 1em;
-  box-sizing: border-box
-}
-
-.grid_item{
-  padding: 1em;
-  gap: 1em;
-  text-align: center;
-}
 
 .table{
   display: flex;
@@ -65,30 +12,6 @@
   order:1;
 }
 
-.team_list{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  box-sizing: border-box;
-
-
-  width: 420px;
-  height: 500px;
-  padding: 20px 30px;
-  background: #1d1d23;
-  border-radius: 10px;
-  box-shadow: 1px 10px 30px rgba(0,0,0,0.2);
-  overflow-y: hidden;
-
-  border:#30789c solid 2px;
-}
-
-.card h2{
-  font-weight: 500;
-  font-size: 16px;
-  margin-bottom: 30px;
-}
 
 input{
   width: 100%;
@@ -102,61 +25,6 @@ input{
   border: 1px solid rgba(79, 79, 80, 0.07);
 }
 
-.members{
-  width: 100%;
-  height: 320px;
-  margin-top: 20px;
-  overflow-y: auto;
-}
-
-.members::-webkit-scrollbar {
-width: 8px;
-}
-
-.members::-webkit-scrollbar-thumb {
-background: rgba(182, 182, 184, 0.373);
-border-radius: 10px;
-}
-
-.members::-webkit-scrollbar-track {
-box-shadow: inset 0 0 2px grey;
-border-radius: 10px;
-}
-
-.member{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 15px;
-  cursor: pointer;
-}
-
-.member:hover{
-  color: #3698c9 !important;
-}
-
-.member .name{
-  align-self: flex-start;
-}
-
-.member .name span{
-  opacity: 0.7;
-  font-size: 10px;
-}
-
-.member .role{
-  margin-left: auto;
-  font-size: 10px;
-  margin-right: 20px;
-}
-
-.member img{
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
 .not-found{
   color: #3698c9;
@@ -164,140 +32,6 @@ border-radius: 10px;
 
 
 /* committee header stuff */
-
-.committee_header{
-  display: flex;
-  align-content: flex-start;
-
-  background-color: palevioletred;
-
-  font-weight: bolder;
-  size: 1em; /*figure out how to make big*/
-  color:#9fc4d6;
-  padding: 2em;
-}
-
-
-.committee_body{
-  display: grid;
-  grid-template-columns: auto auto auto;
-
-  margin: 1em;
-  box-sizing: border-box
-}
-
-.grid_item{
-  padding: 1em;
-  gap: 1em;
-  text-align: center;
-}
-
-.table{
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-
-  order:1;
-}
-
-.team_list{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  box-sizing: border-box;
-
-
-  width: 420px;
-  height: 500px;
-  padding: 20px 30px;
-  background: #1d1d23;
-  border-radius: 10px;
-  box-shadow: 1px 10px 30px rgba(0,0,0,0.2);
-  overflow-y: hidden;
-
-  border:#30789c solid 2px;
-}
-
-.card h2{
-  font-weight: 500;
-  font-size: 16px;
-  margin-bottom: 30px;
-}
-
-input{
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 5px;
-  outline: none;
-  border: none;
-  color: #b4b8ba;
-  background: rgba(220, 220, 224, 0.05);
-  font-size: 12px;
-  border: 1px solid rgba(79, 79, 80, 0.07);
-}
-
-.members{
-  width: 100%;
-  height: 320px;
-  margin-top: 20px;
-  overflow-y: auto;
-}
-
-.members::-webkit-scrollbar {
-width: 8px;
-}
-
-.members::-webkit-scrollbar-thumb {
-background: rgba(182, 182, 184, 0.373);
-border-radius: 10px;
-}
-
-.members::-webkit-scrollbar-track {
-box-shadow: inset 0 0 2px grey;
-border-radius: 10px;
-}
-
-.member{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 15px;
-  cursor: pointer;
-}
-
-.member:hover{
-  color: #3698c9 !important;
-}
-
-.member .name{
-  align-self: flex-start;
-}
-
-.member .name span{
-  opacity: 0.7;
-  font-size: 10px;
-}
-
-.member .role{
-  margin-left: auto;
-  font-size: 10px;
-  margin-right: 20px;
-}
-
-.member img{
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.not-found{
-  color: #3698c9;
-}
-
-
 
 
 /* general stuff */
@@ -318,104 +52,15 @@ body {
     size: 10px;
 }
 
-
-::selection {
-    color: #edeef0;
-    background: rgb(171, 14, 106);
-  }
-
-
-
-/*dashboard page*/
-.dash-buttons{
-  padding: 14px 40px;
-  margin:20px;
-  background-color: #2f2f36;
-  color: #3698c9;
-  font-family: monospace;
-  border-color: #3698c9;
-  
+p {
+    font-size: 8px;
+    margin: 0;
+    color: #cad4da;
+    text-align: center;
+    font-family: monospace;
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
-.modal-content {
-  background-color: #2f2f36;
-  color: #3698c9;
-  margin: 10% auto;
-  padding: 20px;
-  width: 80%;
-  border-color: #3698c9;
-}
-
-.join-modal-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.modal-input{
-  width: 100%;
-}
-
-.modal-content form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#committeeId {
-  width: 200px; /* Adjust width as needed */
-  padding: 8px;
-  margin: 10px 0;
-}
-
-.modal-content input[type="text"],
-.modal-content input[type="user"] {
-    width: 200px;
-    padding: 8px;
-    margin: 10px 0;
-}
-
-#userList {
-  list-style-type: none;
-  padding: 0;
-  margin: 10px 0;
-  width: 100%;
-}
-
-#userList li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.close {
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.modal-content button {
-    width: 120px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background-color: #3698c9;
-}
 
 /* .modal-content label, .modal-content input, .modal-content button {
   margin: 10px 0;

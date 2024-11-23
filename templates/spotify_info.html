@@ -6,7 +6,9 @@
     <dt>{{ item["name"] }}</dt>
     <dd>
       <pre>
-        {{ item["id"] }}
+        {% for song in sg[item["id"]] %}
+           <p>{{ song }}</p>
+        {% endfor %}
       </pre>
     </dd>
   {% endfor %}

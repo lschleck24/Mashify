@@ -66,7 +66,7 @@ class Playlists(db.Model):
         return f"Playlist: ('{self.playlist_id}', '{self.playlist_name}')"
 
 class SongByPlaylist(db.Model):
-    song_id = db.Column(db.String, primary_key=True)
+    song_id = db.Column(db.Integer, primary_key=True)
     playlist_id = db.Column(db.String, nullable=False) 
 
     def __init__(self, song_id, playlist_id):
@@ -77,7 +77,7 @@ class SongByPlaylist(db.Model):
         return f"Song: ('{self.song_id}', '{self.playlist_id}')"
 
 class Song(db.Model):
-    song_id = db.Column(db.String(100), primary_key=True)
+    song_id = db.Column(db.Integer(), primary_key=True)
     song_name = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer(), nullable=False)
     month = db.Column(db.Integer(), nullable=False)
@@ -221,7 +221,7 @@ def show_spotify_info():
     # try to get user's playlists, then add n stuff
     try:
         playlists = sp.current_user_playlists()["items"]
-
+        songs = {}
         # put playlist info into database --- this can prob be turned into a function to be called later, along with info for other tables
 
         # also try to put playlist info into database (if already exists, will go to except and pass on)
@@ -244,7 +244,56 @@ def show_spotify_info():
                 db.session.commit()
             # if playlist already exists, just pass
             except:
-                pass
+                print("playlist already exists")
+
+
+       
+            # get playlist songs
+            results = sp.playlist_tracks(playlist_id)
+            tracks = results["items"]
+
+            while results["next"]:
+                results = sp.next(results)
+                tracks.extend(results["items"])
+            
+            # add playlist songs to songs list
+
+
+            # iterate through songs in playlist
+            songs_in_playlist = [] # fill for each playlist
+
+            for i in range(0, len(tracks)):
+                songs_in_playlist.append(tracks[i]["track"]["name"]) # add song name to list
+
+                item = tracks[i]["track"]
+                
+                #print(tracks[i]["track"])
+                
+                track = tracks[i]["track"] # this track key actually contains the song info
+                track["table_id"] = i # temp key purposes, need to find way to gen later
+                #print(track["name"])
+
+                song_table_id = track["table_id"]
+                song_id = track["id"]
+                song_name = track["name"]
+                # duration = (track["duration_ms"])
+                # artists = [artist['name'] for artist in track['artists']]
+                # release_date = sp.track(song_id)['album']['release_date']
+
+
+                # create song obj row using info
+                new_song_by_playlist = SongByPlaylist(song_id = song_table_id, playlist_id = playlist_table_id)
+                try:
+                    db.session.add(new_song_by_playlist)
+                    db.session.commit()
+                # if song_by_playlist already exists, just pass
+                except:
+                    print("song_by_playlist already exists")
+
+
+                # TODO: add stuff for genre, artist id later
+                #new_song = Song(song_id = song_table_id, song_name = song_name, year = release_date[:4], month = release_date[5:7], day = release_date[8:10])
+            songs[playlist_id] = songs_in_playlist
 
     # if no playlists found, just pass
     except:
@@ -265,7 +314,8 @@ def show_spotify_info():
 
     #return render_template("spotify_info.html", spotify=sp)
     # random page to show playlists
-    return render_template("spotify_info.html", ps=playlists)
+
+    return render_template("spotify_info.html", ps=playlists, sg = songs)
     
 
 
