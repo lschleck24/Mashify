@@ -217,11 +217,11 @@ def show_spotify_info():
     #data = request.form
     # setup spotify object so we can get our data
     sp = Spotify(auth=session.get('token_info').get('access_token'))
+    songs = {}
 
     # try to get user's playlists, then add n stuff
     try:
         playlists = sp.current_user_playlists()["items"]
-        songs = {}
         # put playlist info into database --- this can prob be turned into a function to be called later, along with info for other tables
 
         # also try to put playlist info into database (if already exists, will go to except and pass on)
