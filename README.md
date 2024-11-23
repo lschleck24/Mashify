@@ -7,22 +7,21 @@ Let's say, you are an avid Spotify user, who has downloaded a large number of so
 The app will present a UI capable of acting as a filter for a user's Spotify library. The final product will contain...
 
 ## Getting Started
-(here we write what the user needs to do to get started)
 
-steps to run
-1. clone the repo
-2. cd to repo
-2. pip install flask
-3. virtualenv flask
-4. cd back to repo
-5. pip install -r requirements.txt
-6. flask --app app run --debug --port 3000
+Steps required to run the program:
+1. Clone the repository
+2. cd to the repository
+3. !pip install flask, !pip install spotipy
+4. virtualenv flask
+5. cd back to repository
+6. pip install -r requirements.txt
+7. flask --app app run --debug --port 3000
 
 ## App.py
 brief explanation 
 
 ## Files Included
-- **Project Proposal/Progress**: (download file/link to web viewer here)
+- Link to [Project Proposal & Progress](https://drive.google.com/file/d/1_TW8LrLPcaAd9Z4jfYDBFQ_Xuh82uEou/view?usp=sharing)
 
 
 
