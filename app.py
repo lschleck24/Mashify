@@ -244,7 +244,8 @@ def show_spotify_info():
                 db.session.commit()
             # if playlist already exists, just pass
             except:
-                print("playlist already exists")
+                #print("playlist already exists")
+                pass
 
 
        
@@ -288,7 +289,8 @@ def show_spotify_info():
                     db.session.commit()
                 # if song_by_playlist already exists, just pass
                 except:
-                    print("song_by_playlist already exists")
+                    #rint("song_by_playlist already exists")
+                    pass
 
 
                 # TODO: add stuff for genre, artist id later
