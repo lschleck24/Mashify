@@ -3,8 +3,11 @@
 {% block body %}
 <dl>
   {% for item in ps %}
-    <dt>{{ item["name"] }}</dt>
-    <dd>
+    <dt>
+      <button class="toggle-btn" data-target="playlist-{{item['id']}}">
+      {{ item["name"] }}
+    </button>></dt>
+    <dd id="playlist-{{item['id']}}" class="hidden">
       <pre>
         {% for song in sg[item["id"]] %}
            <p>{{ song }}</p>
@@ -13,4 +16,30 @@
     </dd>
   {% endfor %}
 </dl>
+<script>
+  document.addEventListener('DOMContentLoaded',() =>{
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
+
+    toggleButtons.forEach(button => {
+      button.addEventListener('click',() => {
+        const targetId = button.getAttribute("data-target");
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement.classList.contains("hidden")){
+          targetElement.classList.remove("hidden");
+        } else{
+          targetElement.classList.add("hidden");
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .hidden{
+    display:none;
+  }
+</style>
+
+
 {% endblock body %}

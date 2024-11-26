@@ -104,6 +104,30 @@ class Artist(db.Model):
     def __repr__(self):
         return f"Song: ('{self.artist_id}', '{self.artist_name}')"
 
+class Genre(db.Model):
+    genre_id = db.Column(db.Integer,primary_key=True)
+    genre_name = db.Column(db.String(100),nullable=False,unique=True)
+
+    def __init__(self,genre_id,genre_name):
+        self.genre_id = genre_id
+        self.genre_name = genre_name
+
+    def __repr__(self):
+        return f"Genre: ('{self.genre_id}',  '{self.genre_name}')"
+
+class SongByGenre(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    song_id = db.Column(db.Integer,db.ForeignKey('song.song_id'),nullable=False)
+    genre_id = db.Column(db.Integer,db.ForeignKey('genre.genre_id'),nullable=False)
+
+    def __init__(self, id, song_id, genre_id):
+        self.id = id
+        self.song_id = song_id
+        self.genre_id = genre_id
+
+    def __repr__(self):
+        return f"SongByGenre: ('{self.song_id}','{self.genre_id}')"
+
 
 # TODO: add Genre, SongByArtist, SongByGenre
 # https://www.geeksforgeeks.org/connect-flask-to-a-database-with-flask-sqlalchemy/#setting-up-sqlalchemy
@@ -244,7 +268,8 @@ def show_spotify_info():
                 db.session.commit()
             # if playlist already exists, just pass
             except:
-                print("playlist already exists")
+                #print("playlist already exists")
+                pass
 
 
        
@@ -267,8 +292,6 @@ def show_spotify_info():
 
                 item = tracks[i]["track"]
                 
-                #print(tracks[i]["track"])
-                
                 track = tracks[i]["track"] # this track key actually contains the song info
                 track["table_id"] = i # temp key purposes, need to find way to gen later
                 #print(track["name"])
@@ -279,8 +302,36 @@ def show_spotify_info():
                 # duration = (track["duration_ms"])
                 # artists = [artist['name'] for artist in track['artists']]
                 # release_date = sp.track(song_id)['album']['release_date']
+                #genres = track["genres"]
+                '''
+                artist_id = track['artists'][0]['id']
+                artist_info = sp.artist(artist_id)
+                genres = artist_info['genres']
+                print(genres)
+                '''
 
-
+                all_genres = []
+                for artist in track["artists"]:
+                    artist_id = artist["id"]
+                    artist_info = sp.artist(artist_id)
+                    all_genres.extend(artist_info["genres"])
+                unique_genres = list(set(all_genres))
+                print(unique_genres)
+                '''
+                for genre_name in genres:
+                    genre = Genre.query.filter_by(genre_name=genre_name).first()
+                    if not genre:
+                        genre = Genre(genre_name=genre_name)
+                        db.session.add(genre)
+                        db.session.commit()
+                    
+                    song_genre_association = SongByGenre(song_id = song_table_id,genre_id = genre.genre_id)
+                    try:
+                        db.session.add(song_genre_association)
+                        db.session.commit()
+                    except:
+                        pass
+                '''
                 # create song obj row using info
                 new_song_by_playlist = SongByPlaylist(song_id = song_table_id, playlist_id = playlist_table_id)
                 try:
@@ -288,7 +339,9 @@ def show_spotify_info():
                     db.session.commit()
                 # if song_by_playlist already exists, just pass
                 except:
-                    print("song_by_playlist already exists")
+                    #print("song_by_playlist already exists")
+                    print("error")
+                    pass
 
 
                 # TODO: add stuff for genre, artist id later
