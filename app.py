@@ -136,8 +136,8 @@ class SongByGenre(db.Model):
 
 # setup spotify stuff
 SCOPE = "user-read-email playlist-read-private playlist-read-collaborative user-library-read"
-SPOITFY_CLIENT_ID = "d511528d911b44e9a81863869ee60809"
-SPOTIFY_CLIENT_SECRET = "2b40cfddb1c74814a4092114c8ffc206"
+SPOITFY_CLIENT_ID = "73ab5349d4284b759c07843e5d202eff"
+SPOTIFY_CLIENT_SECRET = "6f02411e145b441dac805c627a2d90d4"
 REDIRECT_URI = "http://127.0.0.1:3000"
 SHOW_DIALOG = True
 
@@ -316,9 +316,9 @@ def show_spotify_info():
                     artist_info = sp.artist(artist_id)
                     all_genres.extend(artist_info["genres"])
                 unique_genres = list(set(all_genres))
-                print(unique_genres)
-                '''
-                for genre_name in genres:
+                #print(unique_genres)
+                ''''
+                for genre_name in unique_genres:
                     genre = Genre.query.filter_by(genre_name=genre_name).first()
                     if not genre:
                         genre = Genre(genre_name=genre_name)
@@ -340,7 +340,7 @@ def show_spotify_info():
                 # if song_by_playlist already exists, just pass
                 except:
                     #print("song_by_playlist already exists")
-                    print("error")
+                    #print("error")
                     pass
 
 
